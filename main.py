@@ -21,28 +21,29 @@ scrape_complete = False
 
 @app.route('/')
 def crawl_for_quotes():
-    global scrape_complete
-    global quotes_list
-    global link_list
-    quotes_list = []
-    link_list = []
+    # global scrape_complete
+    # global quotes_list
+    # global link_list
+    # quotes_list = []
+    # link_list = []
+    #
+    # args = search_index_parser.parse_args()
+    # search_string = args.search
+    #
+    # # start the crawler and execute a callback when complete
+    # eventual = crawl_runner.crawl(QuoteSpider, quotes_list=quotes_list, link_list=link_list)
+    # eventual.addCallback(finished_scrape)
+    # while not scrape_complete:
+    #     continue
+    # if not search_string:
+    #     return json.dumps(link_list)
+    # result = []
+    # for index, link in enumerate(link_list):
+    #     if search_string in quotes_list[index]:
+    #         result.append(link)
+    # return json.dumps(result) if result else json.dumps("no result")
 
-    args = search_index_parser.parse_args()
-    search_string = args.search
-
-    # start the crawler and execute a callback when complete
-    eventual = crawl_runner.crawl(QuoteSpider, quotes_list=quotes_list, link_list=link_list)
-    eventual.addCallback(finished_scrape)
-    while not scrape_complete:
-        continue
-    if not search_string:
-        return json.dumps(link_list)
-    result = []
-    for index, link in enumerate(link_list):
-        if search_string in quotes_list[index]:
-            result.append(link)
-    return json.dumps(result) if result else json.dumps("no result")
-
+    return json.dumps("no result")
 
 def finished_scrape(null):
     global scrape_complete
