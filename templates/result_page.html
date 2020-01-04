@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Search Engine</title>
+	<link rel="stylesheet" href="static/css/main.css"/>
+</head>
+
+<body>
+
+	<div class="container-fluid text-center">
+		<h2>Search Engine</h2>
+
+		<div class="row" style="margin-top:40px;">
+
+		<div class="col-md-8 col-sm-6">
+			<form class="form" id="search_form">
+				<div class="input-group text-center">
+					<input type="text" name="search" class="form-control" placeholder="Enter word to search" autocomplete="off">
+					<button onclick="window.location.href='/search'">Continue</button>
+				</div>
+			</form>
+			<br>
+			<pre><code id="result">
+				<div class="indexItem">
+					<div class="body">
+						{% for index in indices: %}
+						<div class="doctypeItem" data-index="{{ index }}">
+							<h4><span class="centre"> <a href="{{ index['url'] }}">{{ index['title'] }} ({{ index['url'] }})</a> </span></h4>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</code></pre>
+		</div>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

@@ -15,6 +15,7 @@ class QuoteSpider(scrapy.Spider):
         all_info = []
         text = response.xpath('//body//text()').getall()
         all_info.append(response.request.url)
+        all_info.append(response.css('title::text').get())
         actual_words = []
         for entry in text:
             if '\n' in entry:
