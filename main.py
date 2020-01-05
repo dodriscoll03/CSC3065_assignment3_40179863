@@ -4,7 +4,7 @@ from database_connect import connect_to_db
 
 crochet.setup()
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, render_template
 from scrapy import signals
 from scrapy.crawler import CrawlerRunner
 from scrapy.signalmanager import dispatcher
@@ -63,6 +63,7 @@ def scrape(search_string):
         unique_info = {}
         try:
             try:
+                found_urls.append(result[0])
                 words = result[2].replace('.', ' ').replace("\"", ' ').split()
                 url_client.update_one({'url': result[0]}, {'$set': {'title': result[1]}}, upsert=True)
                 for word in words:
@@ -72,23 +73,34 @@ def scrape(search_string):
                         word_client.insert_one({word: [result[0]]})
             except:
                 continue
-            if search_string in result[2]:
-                if result[0] not in all_links:
-                    unique_info['url'] = result[0]
-                    unique_info['title'] = result[1]
-                    all_links.append(unique_info)
         except:
             break
 
     if found_urls:
-        found_match = word_client.find_one({search_string: {'$exists': True}})
-        if found_match:
-            for url in found_match.get(search_string):
-                unique_info = {}
-                get_link_info = url_client.find_one({'url': url})
-                unique_info['url'] = get_link_info.get('url')
-                unique_info['title'] = get_link_info.get('title')
-                all_links.append(unique_info)
+        for split_words in search_string.split():
+            regex_search = '/*%s/*' % split_words
+            found_match = list(word_client.aggregate([
+                {"$addFields": {
+                    "finder": {"$objectToArray": "$$ROOT"}
+                }},
+                    {"$match": {"finder.k": {'$regex': regex_search, '$options': 'i'}}}
+                ]))
+            if found_match:
+                for all_matching_words in found_match:
+                    for matching_url in all_matching_words.get('finder')[1].get('v'):
+                        match = False
+                        if len(all_links) != 0:
+                            for link in all_links:
+                                if matching_url == link.get('url'):
+                                    match = True
+                                    break
+                        if match:
+                            break
+                        unique_info = {}
+                        get_link_info = url_client.find_one({'url': matching_url})
+                        unique_info['url'] = get_link_info.get('url')
+                        unique_info['title'] = get_link_info.get('title')
+                        all_links.append(unique_info)
     return render_template('result_page.html', indices=all_links)
 
 
