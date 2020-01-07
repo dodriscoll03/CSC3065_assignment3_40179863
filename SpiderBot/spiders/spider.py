@@ -3,12 +3,12 @@ import re
 import scrapy
 
 
-class QuoteSpider(scrapy.Spider):
+class SpiderSpider(scrapy.Spider):
 
     name = 'quote'
 
     def __init__(self, *args, **kwargs):
-        super(QuoteSpider, self).__init__(*args, **kwargs)
+        super(SpiderSpider, self).__init__(*args, **kwargs)
         self.start_urls = kwargs.get('searchUrl')
 
     def parse(self, response):
