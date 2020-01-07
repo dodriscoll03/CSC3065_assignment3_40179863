@@ -23,7 +23,6 @@ def _get_connection():
 def connect_to_db(collection=None):
     conn = _get_connection()
     conn = conn['search_engine']
-    # conn.authenticate('40179863', 'Deano8505DOD9997')
 
     # this is for if there is multiple collections you can specify which one
     if collection:
