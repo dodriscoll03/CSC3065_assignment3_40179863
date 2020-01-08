@@ -6,42 +6,42 @@ variables:
   azureServiceConnectionId: 'csc3065-assignment3-search-engine-40179863'
 
 
-#- script: |
-#    pip install pytest
-#    python -m pytest tests/
-#  displayName: 'pytest'
-
-#jobs:
-#- job: 'Setup'
-#  pool:
-#    vmImage: 'Ubuntu-16.04'
-#  steps:
-#  - task: UsePythonVersion@0
-#    inputs:
-#      versionSpec: '3.6'
-#      displayName: 'Use Python $(pythonVersion)'
-#  - script: |
-#      python -m venv antenv
-#      source antenv/bin/activate
-#      python -m pip install --upgrade pip
-#      pip install setup
-#      pip install -r requirements.txt
-#    displayName: "Install requirements"
-
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.6'
-    displayName: 'Use Python $(pythonVersion)'
-- script: |
-    python -m venv antenv
-    source antenv/bin/activate
-    python -m pip install --upgrade pip
-    pip install setup
-    pip install -r requirements.txt
-  displayName: "Install requirements"
 
 jobs:
+- job: 'Setup'
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      displayName: 'Use Python $(pythonVersion)'
+  - script: |
+      python -m venv antenv
+      source antenv/bin/activate
+      python -m pip install --upgrade pip
+      pip install setup
+      pip install -r requirements.txt
+    displayName: "Install requirements"
+  - script: |
+      pip install pytest
+      python -m pytest tests/
+    displayName: 'pytest'
+
+#steps:
+#- task: UsePythonVersion@0
+#  inputs:
+#    versionSpec: '3.6'
+#    displayName: 'Use Python $(pythonVersion)'
+#- script: |
+#    python -m venv antenv
+#    source antenv/bin/activate
+#    python -m pip install --upgrade pip
+#    pip install setup
+#    pip install -r requirements.txt
+#  displayName: "Install requirements"
+
+#jobs:
 - job: 'Archive'
   pool:
     vmImage: 'Ubuntu-16.04'
