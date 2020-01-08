@@ -39,19 +39,18 @@ jobs:
     displayName: 'Upload package'
     artifact: drop
 
-- deployment: DeploymentJob
+- job: 'DeploymentJob'
 pool:
   vmImage: 'Ubuntu-16.04'
+environment: $(environmentName)
 strategy:
   runOnce:
     deploy:
       steps:
-
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: '$(pythonVersion)'
+          versionSpec: '3.6'
         displayName: 'Use Python version'
-
       - task: AzureWebApp@1
         displayName: 'Deploy Azure Web App : {{ webAppName }}'
         inputs:
