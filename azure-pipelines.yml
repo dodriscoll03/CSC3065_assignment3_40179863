@@ -29,4 +29,4 @@ steps:
      verbose:
 - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
   displayName: 'Upload package'
-  artifact: drop
+#  artifact: drop
