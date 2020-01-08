@@ -39,10 +39,9 @@ jobs:
     displayName: 'Upload package'
     artifact: drop
 
-- job: 'DeploymentJob'
+- deployment: DeploymentJob
   pool:
     vmImage: 'Ubuntu-16.04'
-  - deployment: DeploymentJob
   environment: $(environmentName)
   strategy:
     runOnce:
