@@ -9,6 +9,8 @@ trigger:
 
 steps:
 - task: UsePythonVersion@0
+  pool:
+    vmImage: 'Ubuntu-16.04'
   inputs:
     versionSpec: '3.6'
     displayName: 'Use Python $(pythonVersion)'
@@ -21,6 +23,8 @@ steps:
   displayName: "Install requirements"
 
 - task: ArchiveFiles@2
+  pool:
+    vmImage: 'Ubuntu-16.04'
   inputs:
      rootFolderOrFile: '$(Build.SourcesDirectory)'
      includeRootFolder: false
@@ -32,26 +36,26 @@ steps:
   displayName: 'Upload package'
   artifact: drop
 
-  jobs:
-  - deployment: DeploymentJob
-    displayName: search engine
-    pool:
-      vmImage: 'Ubuntu-16.04'
-    environment: 'search-engine-40179863'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.6'
-                displayName: 'Use Python version'
-            - task: AzureWebApp@1
-              displayName: 'Deploy Azure Web App : {{ webAppName }}'
-              inputs:
-                azureSubscription: $(azureServiceConnectionId)
-                appName: $(webAppName)
-                package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-                # The following parameter is specific to the Flask example code. You may
-                # or may not need a startup command for your app.
-                startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
+jobs:
+- deployment: DeploymentJob
+  displayName: search engine
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  environment: 'search-engine-40179863'
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.6'
+              displayName: 'Use Python version'
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App : {{ webAppName }}'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appName: $(webAppName)
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              # The following parameter is specific to the Flask example code. You may
+              # or may not need a startup command for your app.
+              startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
