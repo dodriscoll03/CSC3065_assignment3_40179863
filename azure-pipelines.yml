@@ -35,7 +35,7 @@ pool:
   vmImage: $(vmImageName)
   environment: $(environmentName)
 strategy:
-runOnce:
+  runOnce:
     deploy:
       steps:
       - task: UsePythonVersion@0
