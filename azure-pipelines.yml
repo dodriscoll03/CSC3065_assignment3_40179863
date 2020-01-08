@@ -42,6 +42,8 @@ jobs:
 - job: 'Deployment'
   pool:
     vmImage: 'Ubuntu-16.04'
+  steps:
+  - deployment: DeploymentJob
   displayName: search engine
   environment: 'search-engine-40179863'
   strategy:
