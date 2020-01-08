@@ -4,7 +4,7 @@ trigger:
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '$(pythonVersion)'
+    versionSpec: '3.6'
     displayName: 'Use Python $(pythonVersion)'
 - script: |
     python -m venv antenv
@@ -27,7 +27,7 @@ steps:
      archiveType: 'zip'
      archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
      replaceExistingArchive: true
-     verbose: 
+     verbose:
 - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
   displayName: 'Upload package'
   artifact: drop
