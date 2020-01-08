@@ -1,35 +1,35 @@
 trigger:
 - master
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.6'
-    displayName: 'Use Python $(pythonVersion)'
-- script: |
-    python -m venv antenv
-    source antenv/bin/activate
-    python -m pip install --upgrade pip
-    pip install setup
-    pip install -r requirements.txt
-  displayName: "Install requirements"
-
+#steps:
+#- task: UsePythonVersion@0
+#  inputs:
+#    versionSpec: '3.6'
+#    displayName: 'Use Python $(pythonVersion)'
 #- script: |
-#    pip install pytest
-#    python -m pytest tests/
-#  displayName: 'pytest'
-
-- task: ArchiveFiles@2
-  inputs:
-     rootFolderOrFile: '$(Build.SourcesDirectory)'
-     includeRootFolder: false
-     archiveType: 'zip'
-     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-     replaceExistingArchive: true
-     verbose:
-- publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-  displayName: 'Upload package'
-  artifact: drop
+#    python -m venv antenv
+#    source antenv/bin/activate
+#    python -m pip install --upgrade pip
+#    pip install setup
+#    pip install -r requirements.txt
+#  displayName: "Install requirements"
+#
+##- script: |
+##    pip install pytest
+##    python -m pytest tests/
+##  displayName: 'pytest'
+#
+#- task: ArchiveFiles@2
+#  inputs:
+#     rootFolderOrFile: '$(Build.SourcesDirectory)'
+#     includeRootFolder: false
+#     archiveType: 'zip'
+#     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+#     replaceExistingArchive: true
+#     verbose:
+#- publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+#  displayName: 'Upload package'
+#  artifact: drop
 
 jobs:
 - deployment: DeploymentJob
