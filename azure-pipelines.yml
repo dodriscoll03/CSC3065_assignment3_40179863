@@ -62,7 +62,7 @@ jobs:
           inputs:
             azureSubscription: $(azureServiceConnectionId)
             appName: $(webAppName)
-            package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+            package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
 
             # The following parameter is specific to the Flask example code. You may
             # or may not need a startup command for your app.
