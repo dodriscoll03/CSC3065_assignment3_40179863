@@ -1,22 +1,19 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-strategy:
-  matrix:
-    Python36:
-      python.version: '3.6'
-
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '3.6'
-
+    versionSpec: '$(pythonVersion)'
+    displayName: 'Use Python $(pythonVersion)'
 - script: |
+    python -m venv antenv
+    source antenv/bin/activate
     python -m pip install --upgrade pip
+    pip install setup
     pip install -r requirements.txt
-  displayName: 'Install dependencies'
+    workingDirectory: $(projectRoot)
+  displayName: "Install requirements"
 
 - script: |
     pip install pytest
@@ -30,7 +27,7 @@ steps:
      archiveType: 'zip'
      archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
      replaceExistingArchive: true
-     verbose: # (no value); this input is optional
+     verbose: 
 - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
   displayName: 'Upload package'
   artifact: drop
