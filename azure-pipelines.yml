@@ -64,6 +64,6 @@ stages:
               resourceGroupName: 'search-engine'
               slotName: 'production'
               deploymentMethod: 'auto'
-              package: $(System.DefaultWorkingDirectory)/**/*.zip
+              package: '$(Pipeline.Workspace)/drop/Application$(Build.BuildId).zip'
 
               startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
