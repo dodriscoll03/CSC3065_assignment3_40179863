@@ -1,11 +1,17 @@
 trigger:
 - master
 
+variables:
+  webAppName: 'csc3065-assignment3-40179863'
+  azureServiceConnectionId: 'ecc736c6-8469-4e33-8e6d-9fa8c18f17b8'
+
 
 #- script: |
 #    pip install pytest
 #    python -m pytest tests/
 #  displayName: 'pytest'
+
+
 jobs:
 - job: 'Setup'
   pool:
@@ -54,7 +60,7 @@ jobs:
         - task: AzureWebApp@1
           displayName: 'Deploy Azure Web App : {{ webAppName }}'
           inputs:
-            azureSubscription: 'Azure for Students'
+            azureSubscription: $(azureServiceConnectionId)
             appName: $(webAppName)
             package: $(System.DefaultWorkingDirectory)/drop/$(Build.BuildId).zip
 
