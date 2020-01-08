@@ -34,10 +34,10 @@ steps:
 jobs:
  - job: 'search-engine'
  - deployment: DeploymentJob
-  pool:
-    vmImage: $(vmImageName)
-    environment: $(environmentName)
-  strategy:
+ pool:
+  vmImage: $(vmImageName)
+  environment: $(environmentName)
+ strategy:
     runOnce:
       deploy:
         steps:
