@@ -42,7 +42,6 @@ jobs:
 - deployment: DeploymentJob
 pool:
   vmImage: 'Ubuntu-16.04'
-environment: $(environmentName)
 strategy:
   runOnce:
     deploy:
