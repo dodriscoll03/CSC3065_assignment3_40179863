@@ -8,10 +8,10 @@ trigger:
 
 steps:
     - task: UsePythonVersion@0
-       inputs:
+       inputs: |
          versionSpec: '$(pythonVersion)'
          displayName: 'Use Python $(pythonVersion)'
-    - script:
+    - script: |
          python -m venv antenv
          source antenv/bin/activate
          python -m pip install --upgrade pip
@@ -26,7 +26,7 @@ steps:
   displayName: 'pytest'
 
 - task: ArchiveFiles@2
-   inputs:
+   inputs: |
      rootFolderOrFile: '$(Build.SourcesDirectory)'
      includeRootFolder: false
      archiveType: 'zip'
