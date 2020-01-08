@@ -1,6 +1,24 @@
 trigger:
 - master
 
+
+#- script: |
+#    pip install pytest
+#    python -m pytest tests/
+#  displayName: 'pytest'
+
+- task: ArchiveFiles@2
+  inputs:
+     rootFolderOrFile: '$(Build.SourcesDirectory)'
+     includeRootFolder: false
+     archiveType: 'zip'
+     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+     replaceExistingArchive: true
+     verbose:
+- publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+  displayName: 'Upload package'
+  artifact: drop
+
 steps:
 - task: UsePythonVersion@0
   inputs:
@@ -13,38 +31,8 @@ steps:
     pip install setup
     pip install -r requirements.txt
   displayName: "Install requirements"
-
-#- script: |
-#    pip install pytest
-#    python -m pytest tests/
-#  displayName: 'pytest'
-
-#- task: ArchiveFiles@2
-#  inputs:
-#     rootFolderOrFile: '$(Build.SourcesDirectory)'
-#     includeRootFolder: false
-#     archiveType: 'zip'
-#     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-#     replaceExistingArchive: true
-#     verbose:
-#- publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-#  displayName: 'Upload package'
-#  artifact: drop
-
-jobs:
 - deployment: DeploymentJob
   displayName: search engine
-- task: ArchiveFiles@2
-  inputs:
-     rootFolderOrFile: '$(Build.SourcesDirectory)'
-     includeRootFolder: false
-     archiveType: 'zip'
-     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-     replaceExistingArchive: true
-     verbose:
-- publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-  displayName: 'Upload package'
-  artifact: drop
   pool:
     vmImage: 'Ubuntu-16.04'
   environment: 'search-engine-40179863'
