@@ -1,35 +1,36 @@
 trigger:
 - master
-name: 'search-engine-40179863'
-jobs:
- - job: 'flask-app'
-  pool:
-    vmImage: 'Ubuntu-16.04'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-  steps:
-      - task: UsePythonVersion@0
-         inputs:
-           versionSpec: '$(pythonVersion)'
-           displayName: 'Use Python $(pythonVersion)'
-      - script: |
-           python -m venv antenv
-           source antenv/bin/activate
-           python -m pip install --upgrade pip
-           pip install setup
-           pip install -r requirements.txt
-         workingDirectory: $(projectRoot)
-         displayName: "Install requirements"
-      - task: ArchiveFiles@2
-         inputs:
-           rootFolderOrFile: '$(Build.SourcesDirectory)'
-           includeRootFolder: false
-           archiveType: 'zip'
-           archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-           replaceExistingArchive: true
-           verbose: # (no value); this input is optional
-      - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-         displayName: 'Upload package'
-         artifact: drop
+
+pool:
+  vmImage: 'ubuntu-latest'
+strategy:
+  matrix:
+    Python36:
+      python.version: '3.6'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    pip install pytest
+    python -m pytest tests/
+  displayName: 'pytest'
+
+- task: ArchiveFiles@2
+   inputs:
+     rootFolderOrFile: '$(Build.SourcesDirectory)'
+     includeRootFolder: false
+     archiveType: 'zip'
+     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+     replaceExistingArchive: true
+     verbose: # (no value); this input is optional
+- publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+   displayName: 'Upload package'
+   artifact: drop
