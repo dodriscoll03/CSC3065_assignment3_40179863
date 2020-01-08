@@ -1,4 +1,4 @@
-from main import scrape
+from app import scrape
 from urls import Urls
 import unittest
 
