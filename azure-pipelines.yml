@@ -26,6 +26,7 @@ jobs:
 - job: 'Archive'
   pool:
     vmImage: 'Ubuntu-16.04'
+  steps:
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: '$(Build.SourcesDirectory)'
