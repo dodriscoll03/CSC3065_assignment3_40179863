@@ -1,14 +1,4 @@
 trigger:
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'csc3065-assignment3-search-engine-40179863'
-    appType: 'webApp'
-    appName: 'csc3065-assignment3-40179863'
-    deployToSlotOrASE: true
-    resourceGroupName: 'search-engine'
-    slotName: 'production'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-    deploymentMethod: 'auto'
 - master
 
 variables:
@@ -68,7 +58,12 @@ stages:
             displayName: 'Deploy Azure Web App : csc3065-assignment3-40179863'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
+              appType: 'webApp'
               appName: $(webAppName)
+              deployToSlotOrASE: true
+              resourceGroupName: 'search-engine'
+              slotName: 'production'
+              deploymentMethod: 'auto'
               package: '$(Pipeline.Workspace)/drop/Application$(Build.BuildId).zip'
 
               startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
