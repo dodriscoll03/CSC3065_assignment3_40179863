@@ -3,7 +3,6 @@ trigger:
 
 jobs:
  - job: 'search-engine'
- - deployment: DeploymentJob
    steps:
    - task: UsePythonVersion@0
      inputs:
@@ -33,7 +32,7 @@ jobs:
    - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
      displayName: 'Upload package'
      artifact: drop
-
+ - deployment: DeploymentJob
    pool:
     vmImage: $(vmImageName)
     environment: $(environmentName)
