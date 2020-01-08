@@ -29,8 +29,8 @@ def send_request():
     if search_string is None or not search_string:
         return render_template('index.html')
     else:
-        all_links = scrape(search_string, Urls.urls)
-        return render_template('result_page.html', indices=all_links)
+        all_links, ads = scrape(search_string, Urls.urls)
+        return render_template('result_page.html', indices=all_links, ad_link=ads)
 
 
 def scrape(search_string, given_links):
@@ -39,8 +39,24 @@ def scrape(search_string, given_links):
     found_urls = []
     global output_data
     output_data = []
-
     url_client = connect_to_db('list_of_urls')
+
+    check_for_already_present_links(url_client, urls, found_urls)
+
+    word_client = connect_to_db('list_of_words')
+
+    # run crawler in twisted reactor synchronously
+    scrape_with_crochet(urls)
+
+    get_spider_links(word_client, url_client, found_urls, output_data)
+
+    get_links_present_in_mongo(word_client, url_client, found_urls, search_string, all_links)
+
+    ads = get_ad_information(search_string)
+    return all_links, ads
+
+
+def check_for_already_present_links(url_client, urls, found_urls):
     for url in urls:
         check_url = url_client.find_one({'url': url})
         if check_url:
@@ -52,11 +68,8 @@ def scrape(search_string, given_links):
         if url in urls:
             urls.remove(url)
 
-    word_client = connect_to_db('list_of_words')
 
-    # run crawler in twisted reactor synchronously
-    scrape_with_crochet(urls)
-
+def get_spider_links(word_client, url_client, found_urls, output_data):
     for spider_data in output_data:
         result = spider_data.get('resp')
         try:
@@ -74,6 +87,8 @@ def scrape(search_string, given_links):
         except:
             break
 
+
+def get_links_present_in_mongo(word_client, url_client, found_urls, search_string, all_links):
     if found_urls:
         for split_words in search_string.split():
             regex_search = '/*%s/*' % split_words
@@ -99,8 +114,42 @@ def scrape(search_string, given_links):
                         unique_info['url'] = get_link_info.get('url')
                         unique_info['title'] = get_link_info.get('title')
                         all_links.append(unique_info)
-    return all_links
 
+
+def get_ad_information(search_word):
+    ad_client = connect_to_db('list_of_searched_words')
+    ad_info = {}
+    for split_words in search_word.split():
+        regex_search = '/*%s/*' % split_words
+        all_relavant_ads = list(ad_client.find({"search": {'$regex': regex_search, '$options': 'i'}}))
+        if all_relavant_ads:
+            most_relevant_ad = {}
+            for ads in all_relavant_ads:
+                ad_client.update_one({'search': ads.get('search')}, {'$set': {'count': ads.get('count')+1}})
+                if most_relevant_ad.get('count', 0):
+                    if ads.get('count', 0) >= most_relevant_ad.get('count', 0):
+                        most_relevant_ad['count'] = ads.get('count')
+                        most_relevant_ad['link'] = ads.get('link')
+                        most_relevant_ad['zone_id'] = ads.get('zone_id')
+                else:
+                    most_relevant_ad['count'] = ads.get('count')
+                    most_relevant_ad['link'] = ads.get('link')
+                    most_relevant_ad['zone_id'] = ads.get('zone_id')
+            if ad_info.get('count', 0):
+                if most_relevant_ad.get('count', 0) >= ad_info.get('count', 0):
+                    ad_info['count'] = most_relevant_ad.get('count')
+                    ad_info['link'] = most_relevant_ad.get('link')
+                    ad_info['zone_id'] = most_relevant_ad.get('zone_id')
+            else:
+                ad_info['count'] = most_relevant_ad.get('count')
+                ad_info['link'] = most_relevant_ad.get('link')
+                ad_info['zone_id'] = most_relevant_ad.get('zone_id')
+    if ad_info == {}:
+        result = ad_client.find_one({'search': "default"})
+        ad_info['count'] = result.get('count')
+        ad_info['link'] = result.get('link')
+        ad_info['zone_id'] = result.get('zone_id')
+    return ad_info
 
 
 @crochet.wait_for(timeout=60.0)
