@@ -6,9 +6,9 @@ variables:
   azureServiceConnectionId: 'csc3065-assignment3-search-engine-40179863'
 
 stages:
-- stage: A
+- stage: Setup
   jobs:
-  - job: 'Setup'
+  - job: 'tests'
     pool:
       vmImage: 'Ubuntu-16.04'
     steps:
@@ -24,26 +24,23 @@ stages:
         pip install pytest
         python -m pytest tests/
       displayName: 'pytest'
-
-- stage: B
-  jobs:
   - job: 'Archive'
     pool:
       vmImage: 'Ubuntu-16.04'
     steps:
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-        replaceExistingArchive: true
-        verbose:
-    - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-      displayName: 'Upload package'
-      artifact: drop
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: '$(Build.SourcesDirectory)'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+          replaceExistingArchive: true
+          verbose:
+      - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+        displayName: 'Upload package'
+        artifact: drop
 
-- stage: C
+- stage: Deployment
   jobs:
   - deployment: DeploymentJob
     pool:
