@@ -24,6 +24,7 @@ crawl_runner = CrawlerRunner()
 
 @app.route("/")
 def send_request():
+    return "Hello World"
     args = search_index_parser.parse_args()
     search_string = args.search
     if search_string is None or not search_string:
