@@ -54,7 +54,7 @@ jobs:
         - task: AzureWebApp@1
           displayName: 'Deploy Azure Web App : {{ webAppName }}'
           inputs:
-            azureSubscription: $(azureSubscription)
+            azureSubscription: 'Azure for Students'
             appName: $(webAppName)
             package: $(System.DefaultWorkingDirectory)/drop/$(Build.BuildId).zip
 
