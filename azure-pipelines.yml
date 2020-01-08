@@ -12,54 +12,41 @@ variables:
 #  displayName: 'pytest'
 
 
+steps:
+  pool:
+    vmImage: 'Ubuntu-16.04'
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+    displayName: 'Use Python $(pythonVersion)'
+- script: |
+    python -m venv antenv
+    source antenv/bin/activate
+    python -m pip install --upgrade pip
+    pip install setup
+    pip install -r requirements.txt
+  displayName: "Install requirements"
+
 jobs:
-- job: 'Setup'
+- job: 'Archive'
   pool:
     vmImage: 'Ubuntu-16.04'
   steps:
-  - task: UsePythonVersion@0
+  - task: ArchiveFiles@2
     inputs:
-      versionSpec: '3.6'
-      displayName: 'Use Python $(pythonVersion)'
-  - script: |
-      python -m venv antenv
-      source antenv/bin/activate
-      python -m pip install --upgrade pip
-      pip install setup
-      pip install -r requirements.txt
-    displayName: "Install requirements"
-
-#- job: 'Archive'
-#  pool:
-#    vmImage: 'Ubuntu-16.04'
-#  steps:
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(Build.SourcesDirectory)'
-#      includeRootFolder: false
-#      archiveType: 'zip'
-#      archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-#      replaceExistingArchive: true
-#      verbose:
-#  - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-#    displayName: 'Upload package'
-#    artifact: drop
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+      replaceExistingArchive: true
+      verbose:
+  - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+    displayName: 'Upload package'
+    artifact: drop
 
 - deployment: DeploymentJob
   pool:
     vmImage: 'Ubuntu-16.04'
-  steps:
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-        replaceExistingArchive: true
-        verbose:
-    - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-      displayName: 'Upload package'
-      artifact: drop
   environment: $(environmentName)
   strategy:
     runOnce:
