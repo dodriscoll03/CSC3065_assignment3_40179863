@@ -58,11 +58,11 @@ jobs:
             versionSpec: '3.6'
           displayName: 'Use Python version'
         - task: AzureWebApp@1
-          displayName: 'Deploy Azure Web App : {{ webAppName }}'
+          displayName: 'Deploy Azure Web App : csc3065-assignment3-40179863'
           inputs:
             azureSubscription: $(azureServiceConnectionId)
             appName: $(webAppName)
-            package: $(System.DefaultWorkingDirectory)/drop/$(Build.BuildId).zip
+            package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
 
             # The following parameter is specific to the Flask example code. You may
             # or may not need a startup command for your app.
