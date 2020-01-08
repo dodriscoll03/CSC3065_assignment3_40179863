@@ -35,12 +35,12 @@ pool:
   vmImage: $(vmImageName)
   environment: $(environmentName)
 strategy:
-  runOnce:
+runOnce:
     deploy:
       steps:
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: '$(pythonVersion)'
+          versionSpec: '3.6'
         displayName: 'Use Python version'
 
       - task: AzureWebApp@1
