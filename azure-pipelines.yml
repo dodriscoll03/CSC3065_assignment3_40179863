@@ -31,10 +31,12 @@ steps:
   displayName: 'Upload package'
   artifact: drop
 
+jobs:
 - deployment: DeploymentJob
+  displayName: search engine
   pool:
-  vmImage: $(vmImageName)
-  environment: $(environmentName)
+    vmImage: 'Ubuntu-16.04'
+  environment: 'search-engine-40179863'
   strategy:
     runOnce:
       deploy:
