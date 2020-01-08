@@ -5,60 +5,63 @@ variables:
   webAppName: 'csc3065-assignment3-40179863'
   azureServiceConnectionId: 'csc3065-assignment3-search-engine-40179863'
 
-jobs:
-- job: 'Setup'
-  pool:
-    vmImage: 'Ubuntu-16.04'
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
-      displayName: 'Use Python $(pythonVersion)'
-  - script: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-    displayName: "Install requirements"
-  - script: |
-      pip install pytest
-      python -m pytest tests/
-    displayName: 'pytest'
+stages:
+- stage: A
+  jobs:
+  - job: 'Setup'
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6'
+        displayName: 'Use Python $(pythonVersion)'
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: "Install requirements"
+    - script: |
+        pip install pytest
+        python -m pytest tests/
+      displayName: 'pytest'
 
-- job: 'Archive'
-  pool:
-    vmImage: 'Ubuntu-16.04'
-  steps:
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '$(Build.SourcesDirectory)'
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-      replaceExistingArchive: true
-      verbose:
-  - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-    displayName: 'Upload package'
-    artifact: drop
+- stage: B
+  jobs:
+  - job: 'Archive'
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    steps:
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+        replaceExistingArchive: true
+        verbose:
+    - publish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+      displayName: 'Upload package'
+      artifact: drop
 
-- deployment: DeploymentJob
-  pool:
-    vmImage: 'Ubuntu-16.04'
-  environment: $(environmentName)
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - task: UsePythonVersion@0
-          inputs:
-            versionSpec: '3.6'
-          displayName: 'Use Python version'
-        - task: AzureWebApp@1
-          displayName: 'Deploy Azure Web App : csc3065-assignment3-40179863'
-          inputs:
-            azureSubscription: $(azureServiceConnectionId)
-            appName: $(webAppName)
-            package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+- stage: C
+  jobs:
+  - deployment: DeploymentJob
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.6'
+            displayName: 'Use Python version'
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App : csc3065-assignment3-40179863'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appName: $(webAppName)
+              package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
 
-            # The following parameter is specific to the Flask example code. You may
-            # or may not need a startup command for your app.
-
-            startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
+              startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
