@@ -24,7 +24,7 @@ steps:
   displayName: 'pytest'
 
 - task: ArchiveFiles@2
-   inputs:
+  inputs:
      rootFolderOrFile: '$(Build.SourcesDirectory)'
      includeRootFolder: false
      archiveType: 'zip'
