@@ -1,4 +1,14 @@
 trigger:
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'csc3065-assignment3-search-engine-40179863'
+    appType: 'webApp'
+    appName: 'csc3065-assignment3-40179863'
+    deployToSlotOrASE: true
+    resourceGroupName: 'search-engine'
+    slotName: 'production'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    deploymentMethod: 'auto'
 - master
 
 variables:
