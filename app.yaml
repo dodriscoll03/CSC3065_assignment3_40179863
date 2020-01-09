@@ -1,6 +1,6 @@
-runtime: python36
+runtime: python37
 env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
-    python_version: 3.6
+    python_version: 3.7
