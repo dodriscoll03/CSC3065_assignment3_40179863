@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM python:3.7.5-slim
 
 RUN apt-get update -y && \
     apt-get install -y python-pip python-dev
@@ -10,8 +10,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-WORKDIR /search_engine
+WORKDIR /
 
-ENTRYPOINT [ "python" ]
-
-CMD ["./app.py"]
+CMD ["python", "./app.py"]
