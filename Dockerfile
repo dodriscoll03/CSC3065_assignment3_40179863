@@ -14,4 +14,4 @@ WORKDIR /search_engine
 
 ENTRYPOINT [ "python" ]
 
-CMD ["./main.py"]
+CMD ["./app.py"]
