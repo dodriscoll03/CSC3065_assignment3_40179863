@@ -8,7 +8,8 @@ COPY ./requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY . ./app/
+WORKDIR /app/
 
 WORKDIR /
 EXPOSE 8080
