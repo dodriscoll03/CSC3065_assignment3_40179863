@@ -53,14 +53,7 @@ blocks:
           - checkout
           - docker pull "$DOCKER_USERNAME"/pyflasksemaphore
           - docker-compose up -d
-      jobs:
-      - name: Check Running Images
-        commands:
-          - docker ps
-      - name: Run Unit test
-        commands:
-          - docker exec -it semaphore-pyflask-docker_flasksemaphore_1 python -m unittest
-
+      
 # Manual deployment to Heroku on successful builds on master branch:
 # For info on promotions, see:
 # https://docs.semaphoreci.com/article/50-pipeline-yaml#promotions
