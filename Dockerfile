@@ -8,9 +8,8 @@ COPY ./requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY . ./app/
-WORKDIR /app/
+COPY . /app
+WORKDIR /app
 
-WORKDIR /
 EXPOSE 8080
 CMD ["python", "./app.py"]
