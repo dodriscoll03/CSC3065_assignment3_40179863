@@ -6,7 +6,7 @@ steps:
   args: ['push', 'gcr.io/search-engine-40179863-cd/app']
 
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['beta', 'run', 'deploy', 'app', '--image', 'gcr.io/search-engine-40179863-cd/app', '--region', 'us-central1']
+  args: ['beta', 'run', 'deploy', 'app', '--image', 'gcr.io/search-engine-40179863-cd/app', '--cluster', 'search-engine-40179863-cd', '--cluster-location', 'europe-west1-b']
 images:
 - gcr.io/search-engine-40179863-cd/app
 timeout: 1200s
