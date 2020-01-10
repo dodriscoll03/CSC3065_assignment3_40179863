@@ -5,8 +5,24 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/search-engine-40179863-cd/app']
 
-- name: 'gcr.io/cloud-builders/gcloud'
-  args: ['beta', 'run', 'deploy', 'app', '--image', 'gcr.io/search-engine-40179863-cd/app', '--cluster', 'search-engine-40179863-cd', '--cluster-location', 'europe-west1-b']
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'k8s/']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=search-engine-40179863-cd'
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: [
+   'set',
+   'image',
+   'deployment',
+   'app',
+   'app=gcr.io/search-engine-40179863-cd/app'
+  ]
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=search-engine-40179863-cd'
+
 images:
 - gcr.io/search-engine-40179863-cd/app
 timeout: 1200s
