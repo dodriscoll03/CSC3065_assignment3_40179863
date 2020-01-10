@@ -21,7 +21,6 @@ stages:
         pip install -r requirements.txt
       displayName: "Install requirements"
     - script: |
-        pip install pytest
         python -m pytest tests/
       displayName: 'pytest'
   - job: 'Archive'

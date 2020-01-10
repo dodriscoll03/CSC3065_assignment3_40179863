@@ -12,15 +12,15 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/search-engine-40179863-cd/app']
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/search-engine-40179863-cd/app'
   entrypoint: '/bin/bash'
   args: ['-c','virtualenv /workspace/venv' ]
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/search-engine-40179863-cd/app'
   entrypoint: 'venv/bin/pip'
   args: ['install', '-V', '-r', 'requirements.txt']
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/search-engine-40179863-cd/app'
   entrypoint: 'venv/bin/python'
   args: ['-m', 'pytest', '-v']
 
