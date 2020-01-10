@@ -6,23 +6,23 @@ steps:
 #  - -c
 #  - 'pip3 install -t /workspace/lib -r requirements.txt && pip3 install pytest && python -m pytest tests/'
 
-- name: 'gcr.io/search-engine-40179863-cd/python-cloudbuild'
-  entrypoint: '/bin/bash'
-  args: ['-c','virtualenv /workspace/venv' ]
-
-- name: 'gcr.io/search-engine-40179863-cd/python-cloudbuild'
-  entrypoint: 'venv/bin/pip'
-  args: ['install', '-V', '-r', 'requirements.txt']
-
-- name: 'gcr.io/search-engine-40179863-cd/python-cloudbuild'
-  entrypoint: 'venv/bin/python'
-  args: ['-m', 'pytest', '-v']
-
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/search-engine-40179863-cd/app', '.']
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/search-engine-40179863-cd/app']
+
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args: ['-c','virtualenv /workspace/venv' ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'venv/bin/pip'
+  args: ['install', '-V', '-r', 'requirements.txt']
+
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'venv/bin/python'
+  args: ['-m', 'pytest', '-v']
 
 - name: 'gcr.io/cloud-builders/kubectl'
   args: ['apply', '-f', 'k8s/']
