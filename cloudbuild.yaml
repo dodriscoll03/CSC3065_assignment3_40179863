@@ -14,7 +14,7 @@ steps:
 
 - name: 'gcr.io/search-engine-40179863-cd/app'
   entrypoint: '/bin/bash'
-  args: ['-c','virtualenv /workspace/venv' ]
+  args: ['-c','/workspace/venv' ]
 
 - name: 'gcr.io/search-engine-40179863-cd/app'
   entrypoint: 'venv/bin/pip'
