@@ -27,6 +27,7 @@ blocks:
             - heroku buildpacks:add https://github.com/Dynatrace/heroku-buildpack-dynatrace.git
             - heroku config:set DT_TENANT=slk29306
             - heroku config:set DT_API_TOKEN=2l93O9A5RTaeMiwDf0RlD
+            - git push heroku master
 
             - heroku stack:set container --app $HEROKU_APP
             - heroku container:release web --app $HEROKU_APP
