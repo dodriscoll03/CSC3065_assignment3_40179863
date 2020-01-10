@@ -66,4 +66,4 @@ stages:
               deploymentMethod: 'auto'
               package: '$(Pipeline.Workspace)/drop/Application$(Build.BuildId).zip'
 
-              startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
+              startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 app:app'
