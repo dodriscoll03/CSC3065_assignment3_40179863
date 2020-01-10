@@ -1,0 +1,12 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/search-engine-40179863-cd/app', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/search-engine-40179863-cd/app']
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'app', '--image', 'gcr.io/search-engine-40179863-cd/app', '--region', 'us-central1']
+images:
+- gcr.io/search-engine-40179863-cd/app
+timeout: 1200s
