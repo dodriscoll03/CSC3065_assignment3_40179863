@@ -4,7 +4,7 @@ steps:
   entrypoint: /bin/sh
   args:
   - -c
-  - 'pip install -t /workspace/lib -r requirements.txt && pytest functions/**/test_spider.py'
+  - 'pip install -t /workspace/lib -r requirements.txt && python -m unittest discover --verbose -s ./tests/ -p test_spider.py'
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/search-engine-40179863-cd/app', '.']
