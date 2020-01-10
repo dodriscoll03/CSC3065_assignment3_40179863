@@ -1,4 +1,7 @@
 steps:
+- name: 'python:3.7'
+    args: ["python","-m","unittest","discover","--verbose","-s",".tests/","-p","*test*.py"]
+
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/search-engine-40179863-cd/app', '.']
 
