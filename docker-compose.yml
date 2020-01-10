@@ -9,8 +9,8 @@ services:
       cache_from:
         - vrt97/pyflasksemaphore
     ports:
-      - "8080:8080"
+      - "5000:5000"
     volumes:
       - .:/app/
     environment:
-      - PORT=8080
+      - PORT=5000
